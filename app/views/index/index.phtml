@@ -1,0 +1,48 @@
+<?php
+/**
+ * @var array $availableCurrencies
+ * @var array $js
+ * @var array $css
+ */
+
+$title = 'Find';
+$this->layout('layout', compact('title', 'js', 'css'));
+?>
+<div class="card">
+    <div class="card-header">
+        <?= $title ?>
+    </div>
+    <div class="card-body">
+        <form id="train-route-finder" autocomplete="off">
+            <fieldset>
+                <div class="form-group">
+                    <label for="from-amount">From</label>
+                    <div class="input-group">
+                        <select class="form-control" id="from-currency">
+                            <?php foreach($availableCurrencies as $currency): ?>
+                                <option><?= $currency ?></option>
+                            <?php endforeach; ?>
+                        </select>
+
+                        <input type="text" class="form-control w-50" id="from-amount" placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="to-amount">To</label>
+                    <div class="input-group">
+                        <select class="form-control" id="to-currency">
+                            <?php foreach($availableCurrencies as $k => $currency): ?>
+                                <option <?= $k == 1 ? 'selected' : '' ?>><?= $currency ?></option>
+                            <?php endforeach; ?>
+                        </select>
+
+                        <input type="text" class="form-control w-50" id="to-amount" placeholder="0.00" readonly>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3"><span class="find-icon">🔎</span> Find route</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
