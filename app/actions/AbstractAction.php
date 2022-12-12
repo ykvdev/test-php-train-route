@@ -1,23 +1,37 @@
 <?php
 
-namespace app\controllers;
+namespace app\actions;
 
 use app\services\ConfigService;
 use app\services\ViewRendererService;
+use DI\Container;
 
-abstract class AbstractController
+abstract class AbstractAction
 {
+    protected Container $di;
+
     protected ConfigService $config;
 
     protected ViewRendererService $viewRenderer;
 
     protected array $routeParams;
 
-    public function __construct(ConfigService $config, ViewRendererService $viewRenderer, array $routeParams = [])
+    public function __construct(Container $di, ConfigService $config, ViewRendererService $viewRenderer, array $routeParams = [])
     {
+        $this->di = $di;
         $this->config = $config;
         $this->viewRenderer = $viewRenderer;
         $this->routeParams = $routeParams;
+    }
+
+    /*
+     * Main entrypoint into the action class
+     */
+    abstract public function run(): void;
+
+    protected function isAjaxRequest(): bool
+    {
+        return strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') == 'xmlhttprequest';
     }
 
     protected function getVar(string $var): ?string

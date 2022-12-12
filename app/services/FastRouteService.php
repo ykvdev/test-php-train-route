@@ -18,8 +18,8 @@ class FastRouteService
 
         $this->dispatcher = cachedDispatcher(function(RouteCollector $r) {
             foreach ($this->config->get('services.fast_route.routes') as $routeParts) {
-                [$method, $route, $controller, $action] = $routeParts;
-                $r->addRoute($method, $route, [$controller, $action]);
+                [$method, $route, $action] = $routeParts;
+                $r->addRoute($method, $route, $action);
             }
         }, [
             'cacheFile' => $this->config->get('services.fast_route.cache_file'),

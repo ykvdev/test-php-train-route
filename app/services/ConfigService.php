@@ -8,7 +8,7 @@ class ConfigService
 
     public function __construct()
     {
-        $this->config = require ROOT_PATH . '/app/configs/common.php';
+        $this->config = require ROOT_PATH . '/app/config.php';
     }
 
     public function get(string $path): mixed

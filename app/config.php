@@ -1,6 +1,7 @@
 <?php
 
-use app\controllers\IndexController;
+use app\actions\IndexAction;
+use app\actions\PagesAction;
 
 return [
     'public_dir_path' => ROOT_PATH . '/public',
@@ -39,7 +40,8 @@ return [
             'cache_file' => ROOT_PATH . '/data/fast_route.cache',
 
             'routes' => [
-                ['GET', '/', IndexController::class, 'index'],
+                ['GET', '/', IndexAction::class],
+                ['GET', '/pages/{page}', PagesAction::class],
             ],
         ],
     ],

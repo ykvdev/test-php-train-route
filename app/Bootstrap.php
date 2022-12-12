@@ -2,7 +2,7 @@
 
 namespace app;
 
-use app\controllers\PagesController;
+use app\actions\PagesAction;
 use app\services\ConfigService;
 use DI\Container;
 use FastRoute\Dispatcher;
@@ -65,20 +65,20 @@ class Bootstrap
         $routeData = $this->fastRoute->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
         switch ($routeData['result']) {
             case Dispatcher::METHOD_NOT_ALLOWED:
-                $controller = PagesController::class;
-                $action = 'error405';
+                $action = PagesAction::class;
+                $params = ['page' => 'error405'];
                 break;
 
             case Dispatcher::FOUND:
-                [$controller, $action] = $routeData['handler'];
+                $action = $routeData['handler'];
                 $params = $routeData['params'];
                 break;
 
             default:
-                $controller = PagesController::class;
-                $action = 'error404';
+                $action = PagesAction::class;
+                $params = ['page' => 'error404'];
         }
 
-        $this->di->call([$controller, $action . 'Action'], ['routeParams' => $params ?? []]);
+        $this->di->call([$action, 'run'], ['routeParams' => $params]);
     }
 };
