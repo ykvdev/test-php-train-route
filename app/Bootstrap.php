@@ -8,7 +8,6 @@ use DI\Container;
 use FastRoute\Dispatcher;
 use app\services\FastRouteService;
 use app\services\WhoopsService;
-use ParagonIE\AntiCSRF\AntiCSRF;
 
 class Bootstrap
 {
@@ -63,26 +62,21 @@ class Bootstrap
 
     private function runAction(): void
     {
-        if($_POST && !(new AntiCSRF())->validateRequest()) {
-            $controller = PagesController::class;
-            $action = 'error419';
-        } else {
-            $routeData = $this->fastRoute->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-            switch ($routeData['result']) {
-                case Dispatcher::METHOD_NOT_ALLOWED:
-                    $controller = PagesController::class;
-                    $action = 'error405';
-                    break;
+        $routeData = $this->fastRoute->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+        switch ($routeData['result']) {
+            case Dispatcher::METHOD_NOT_ALLOWED:
+                $controller = PagesController::class;
+                $action = 'error405';
+                break;
 
-                case Dispatcher::FOUND:
-                    [$controller, $action] = $routeData['handler'];
-                    $params = $routeData['params'];
-                    break;
+            case Dispatcher::FOUND:
+                [$controller, $action] = $routeData['handler'];
+                $params = $routeData['params'];
+                break;
 
-                default:
-                    $controller = PagesController::class;
-                    $action = 'error404';
-            }
+            default:
+                $controller = PagesController::class;
+                $action = 'error404';
         }
 
         $this->di->call([$controller, $action . 'Action'], ['routeParams' => $params ?? []]);

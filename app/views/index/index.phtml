@@ -5,7 +5,7 @@
  * @var array $css
  */
 
-$title = 'Find';
+$title = 'Поиск маршрута';
 $this->layout('layout', compact('title', 'js', 'css'));
 ?>
 <div class="card">
@@ -16,33 +16,51 @@ $this->layout('layout', compact('title', 'js', 'css'));
         <form id="train-route-finder" autocomplete="off">
             <fieldset>
                 <div class="form-group">
-                    <label for="from-amount">From</label>
-                    <div class="input-group">
-                        <select class="form-control" id="from-currency">
-                            <?php foreach($availableCurrencies as $currency): ?>
-                                <option><?= $currency ?></option>
-                            <?php endforeach; ?>
-                        </select>
-
-                        <input type="text" class="form-control w-50" id="from-amount" placeholder="0.00">
-                    </div>
+                    <label for="train-number">Номер поезда</label>
+                    <input type="text" class="form-control" id="train-number" placeholder="016А">
+                    <div class="invalid-feedback">Неверное значение</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="to-amount">To</label>
-                    <div class="input-group">
-                        <select class="form-control" id="to-currency">
-                            <?php foreach($availableCurrencies as $k => $currency): ?>
-                                <option <?= $k == 1 ? 'selected' : '' ?>><?= $currency ?></option>
-                            <?php endforeach; ?>
-                        </select>
-
-                        <input type="text" class="form-control w-50" id="to-amount" placeholder="0.00" readonly>
-                    </div>
+                    <label for="departure-date">Дата отправления</label>
+                    <input type="date" class="form-control" id="departure-date">
+                    <div class="invalid-feedback">Неверное значение</div>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-3"><span class="find-icon">🔎</span> Find route</button>
+                <div class="form-group">
+                    <label for="departure-station">Станция отправления</label>
+                    <input type="text" class="form-control" id="departure-station" placeholder="Санкт-Петербург">
+                    <div class="invalid-feedback">Неверное значение</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="arrival-station">Станция прибытия</label>
+                    <input type="text" class="form-control" id="arrival-station" placeholder="Москва">
+                    <div class="invalid-feedback">Неверное значение</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3"><span class="find-icon">🔎</span> Найти маршрут</button>
             </fieldset>
         </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="results-modal" tabindex="-1" role="dialog" aria-labelledby="results-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="results-modal-title">Результат</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
     </div>
 </div>

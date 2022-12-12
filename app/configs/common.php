@@ -2,8 +2,6 @@
 
 use app\controllers\IndexController;
 
-define('ROOT_PATH', realpath(__DIR__ . '/../../'));
-
 return [
     'public_dir_path' => ROOT_PATH . '/public',
 
@@ -21,8 +19,8 @@ return [
         ],*/
 
         'view_renderer' => [
-            'path' => ROOT_PATH . '/app/views',
-            'extension' => 'phtml',
+            'views_dir' => ROOT_PATH . '/app/views',
+            'views_ext' => 'phtml',
         ],
 
         'whoops' => [

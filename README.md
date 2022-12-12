@@ -27,7 +27,7 @@
    a. реализовать приём входных данных от фронтенда;<br/>
    b. валидировать входные данные;<br/>
    c. отправлять данные на веб-сервис
-   `https://test-api.starliner.ru/Api/connect/Soap/Train/1.1.0?wsdl` используя
+   https://test-api.starliner.ru/Api/connect/Soap/Train/1.1.0?wsdl используя
    протокол SOAP;<br/>
    d. получать и обрабатывать ответ от веб-сервиса и передавать данные на
    фронтенд;<br/>
@@ -41,7 +41,7 @@
 
 ### Описание железнодорожного веб-сервиса
 
-WSDL: `https://test-api.starliner.ru/Api/connect/Soap/Train/1.1.0?wsdl` <br/>
+WSDL: https://test-api.starliner.ru/Api/connect/Soap/Train/1.1.0?wsdl <br/>
 Метод отдающий маршрут поезда: `trainRoute`
 
 ### Входные параметры

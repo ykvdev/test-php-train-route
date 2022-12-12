@@ -2,6 +2,8 @@
 
 use app\Bootstrap;
 
-require __DIR__ . '/../vendor/autoload.php';
+define('ROOT_PATH', realpath(__DIR__ . '/..'));
 
-(new Bootstrap($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']))->run();
+require ROOT_PATH . '/vendor/autoload.php';
+
+(new Bootstrap)->run();

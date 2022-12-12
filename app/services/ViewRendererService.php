@@ -3,24 +3,17 @@
 namespace app\services;
 
 use League\Plates\Engine;
-use League\Plates\Extension\URI;
-use ParagonIE\AntiCSRF\AntiCSRF;
 
 class ViewRendererService
 {
-    /** @var Engine */
-    private $renderer;
+    private Engine $renderer;
 
-    public function __construct(array $viewRendererConfig)
+    public function __construct(ConfigService $config)
     {
-        $this->renderer = new Engine($viewRendererConfig['views_dir'], $viewRendererConfig['views_ext']);
-        //$this->renderer->loadExtension(new URI($_SERVER['PATH_INFO'] ?? null));
-        $this->renderer->registerFunction('csrf', function(string $formActionUrl) {
-            return (new AntiCSRF())->insertToken($formActionUrl, false);
-        });
+        $this->renderer = new Engine($config->get('services.view_renderer.views_dir'), $config->get('services.view_renderer.views_ext'));
     }
 
-    public function render(string $viewAlias, array $vars = []) : string
+    public function render(string $viewAlias, array $vars = []): string
     {
         $view = $this->renderer->make($viewAlias);
         if(!$view->exists()) {
