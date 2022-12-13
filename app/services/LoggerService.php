@@ -2,30 +2,52 @@
 
 namespace app\services;
 
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputInterface;
-
 class LoggerService
 {
+    /** @var ConfigService */
     private ConfigService $config;
 
-    public function __construct(ConfigService $config)
+    /** @var string */
+    private string $logName;
+
+    /**
+     * @param ConfigService $config
+     * @param string $logName
+     */
+    public function __construct(ConfigService $config, string $logName)
     {
         $this->config = $config;
+        $this->logName = $logName;
     }
 
+    /**
+     * @param string $msg
+     * @return void
+     */
     public function info(string $msg): void
     {
         $msg = date('Y-m-d H:i:s') . ' [INFO] ' . $msg;
-        $this->msg($msg);
+        $this->log($msg);
     }
 
+    /**
+     * @param string $msg
+     * @return void
+     */
     public function error(string $msg): void {
         $msg = date('Y-m-d H:i:s') . ' [ERROR] ' . $msg;
-        $this->msg($msg);
+        $this->log($msg);
     }
 
-    public function msg(string $msg): void {
-        file_put_contents($this->config->get('services.logger.logs_path'), $msg . PHP_EOL, FILE_APPEND);
+    /**
+     * @param string $msg
+     * @return void
+     */
+    public function log(string $msg): void {
+        file_put_contents(
+            sprintf($this->config->get('services.logger.logs_path'), $this->logName),
+            $msg . PHP_EOL,
+            FILE_APPEND
+        );
     }
 }

@@ -4,7 +4,7 @@ namespace app\api\Starliner;
 
 use app\api\Starliner\Operations\TrainRouteOperation;
 
-class Starliner
+class Client
 {
     /** @var Credentials */
     private readonly Credentials $credentials;
@@ -36,7 +36,7 @@ class Starliner
      *
      * @return TrainRouteOperation
      */
-    public function getTrainRoute(): TrainRouteOperation
+    public function getTrainRouteOperation(): TrainRouteOperation
     {
         return (new TrainRouteOperation($this->soapClient, $this->credentials));
     }

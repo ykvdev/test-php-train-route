@@ -14,11 +14,6 @@ return [
     ],
 
     'services' => [
-        /*'guzzle' => [
-            'http_errors' => false,
-            'user_agent' => 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.132 Safari/537.36',
-        ],*/
-
         'view_renderer' => [
             'views_dir' => ROOT_PATH . '/app/views',
             'views_ext' => 'phtml',
@@ -29,18 +24,25 @@ return [
         ],
 
         'logger' => [
-            'logs_path' => ROOT_PATH . '/data/logs/app.log',
+            'logs_path' => ROOT_PATH . '/data/logs/%s.log',
         ],
 
         'starliner_api' => [
-
+            'auth' => [
+                'wsdl_url' => 'https://test-api.starliner.ru/Api/connect/Soap/Train/1.1.0?wsdl',
+                'login' => 'test',
+                'password' => 'bYKoDO2it',
+                'terminal' => 'htk_test',
+                'represent_id' => 22400,
+            ],
+            'log_name' => 'starliner_api',
         ],
 
         'fast_route' => [
             'cache_file' => ROOT_PATH . '/data/fast_route.cache',
 
             'routes' => [
-                ['GET', '/', IndexAction::class],
+                [['GET', 'POST'], '/', IndexAction::class],
                 ['GET', '/pages/{page}', PagesAction::class],
             ],
         ],

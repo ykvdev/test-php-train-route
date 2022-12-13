@@ -13,29 +13,29 @@ $this->layout('layout', compact('title', 'js', 'css'));
         <?= $title ?>
     </div>
     <div class="card-body">
-        <form id="train-route-finder" autocomplete="off">
+        <form id="train-route-finder">
             <fieldset>
                 <div class="form-group">
                     <label for="train-number">Номер поезда</label>
-                    <input type="text" class="form-control" id="train-number" placeholder="016А">
+                    <input type="text" class="form-control" id="train-number" name="trainNumber" placeholder="016А">
                     <div class="invalid-feedback">Неверное значение</div>
                 </div>
 
                 <div class="form-group">
                     <label for="departure-date">Дата отправления</label>
-                    <input type="date" class="form-control" id="departure-date">
+                    <input type="date" class="form-control" id="departure-date" name="departureDate">
                     <div class="invalid-feedback">Неверное значение</div>
                 </div>
 
                 <div class="form-group">
                     <label for="departure-station">Станция отправления</label>
-                    <input type="text" class="form-control" id="departure-station" placeholder="Санкт-Петербург">
+                    <input type="text" class="form-control" id="departure-station" name="departureStation" placeholder="Санкт-Петербург">
                     <div class="invalid-feedback">Неверное значение</div>
                 </div>
 
                 <div class="form-group">
                     <label for="arrival-station">Станция прибытия</label>
-                    <input type="text" class="form-control" id="arrival-station" placeholder="Москва">
+                    <input type="text" class="form-control" id="arrival-station" name="arrivalStation" placeholder="Москва">
                     <div class="invalid-feedback">Неверное значение</div>
                 </div>
 

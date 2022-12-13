@@ -52,8 +52,13 @@ class Response
      */
     public function getError(): ?string
     {
-        $this->getBody(true);
-        return $this->bodyDecoded['SOAP-Body']['SOAP-Fault']['faultstring'] ?? null;
+        if(!$this->getBody(true)) {
+            return 'Response body not received';
+        } elseif($error = $this->bodyDecoded['SOAP-Body']['SOAP-Fault']['faultstring'] ?? null) {
+            return $error;
+        } else {
+            return null;
+        }
     }
 
     /**

@@ -28,16 +28,7 @@
                 self.form = $(this);
 
                 if(self.validateFields()) {
-                    this.toggleFormDisablingAndAnimation();
-                    /*
-                    send AJAX request
-                    ajax success:
-                        this.showModal(response.text, response.isSuccess);
-                    ajax error
-                        this.showModal('Произошла непредвиденная ошибка, попробуйте еще раз', false);
-                    ajax complete
-                        this.toggleFormDisablingAndAnimation();
-                    */
+                    self.sendRequest();
                 }
             });
         });
@@ -56,7 +47,29 @@
             }
         }
 
-        return hasErrors;
+        return !hasErrors;
+    },
+
+    sendRequest: function () {
+        $.ajax({
+            type: 'POST',
+            url: '/',
+            data: self.form.serialize(),
+            dataType: 'json',
+            beforeSend: function() {
+                self.toggleFormDisablingAndAnimation();
+            }
+        }).done(function(responseJson) {
+            if(responseJson.error) {
+                self.showModal(responseJson.error, false);
+            } else {
+                self.showModal(self.formatRouteInfoToText(responseJson.stop_list));
+            }
+        }).fail(function(jqxhr, textStatus, error) {
+            self.showModal('Произошла непредвиденная ошибка', false);
+        }).always(function () {
+            self.toggleFormDisablingAndAnimation();
+        });
     },
 
     toggleFormDisablingAndAnimation: function() {
@@ -70,6 +83,18 @@
         }
 
         findIcon.toggleClass('rotation');
+    },
+
+    formatRouteInfoToText: function (stationsList) {
+        let route = '';
+        for(const i in stationsList) {
+            let station = stationsList[i];
+            route += '<b>Станция ' + station['stop'] + ':</b> '
+                + station['arrival_time'] + ' - ' + station['departure_time']
+                + ' (' + station['stop_time'] + ' мин)<br>';
+        }
+
+        return route;
     },
 
     showModal: function(text, isSuccess = true) {
