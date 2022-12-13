@@ -12,6 +12,8 @@
         "ext-json": "*",
         "ext-simplexml": "*",
         "ext-fileinfo": "*",
+        "ext-soap": "*",
+        "ext-libxml": "*",
         "nikic/fast-route": "^1.3",
         "league/plates": "^3.4",
         "php-di/php-di": "^6.4"
