@@ -7,8 +7,12 @@ use Whoops\Run;
 
 class WhoopsService
 {
+    /** @var ConfigService */
     private ConfigService $config;
 
+    /**
+     * @param ConfigService $config
+     */
     public function __construct(ConfigService $config)
     {
         $this->config = $config;

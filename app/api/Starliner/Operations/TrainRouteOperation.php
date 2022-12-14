@@ -3,7 +3,6 @@
 namespace app\api\Starliner\Operations;
 
 use app\api\Starliner\Credentials;
-use app\api\Starliner\Response;
 
 /**
  * Метод отдающий маршрут поезда

@@ -32,6 +32,10 @@ class IndexAction extends AbstractAction
 
     /**
      * @return void
+     * @throws ResponseException
+     * @throws UserErrorException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \JsonException
      */
     public function run(): void

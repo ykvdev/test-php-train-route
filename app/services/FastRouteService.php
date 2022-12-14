@@ -8,10 +8,15 @@ use function FastRoute\cachedDispatcher;
 
 class FastRouteService
 {
+    /** @var ConfigService */
     private ConfigService $config;
 
+    /** @var Dispatcher */
     private Dispatcher $dispatcher;
 
+    /**
+     * @param ConfigService $config
+     */
     public function __construct(ConfigService $config)
     {
         $this->config = $config;
@@ -27,6 +32,11 @@ class FastRouteService
         ]);
     }
 
+    /**
+     * @param string $requestMethod
+     * @param string $requestUri
+     * @return array
+     */
     public function dispatch(string $requestMethod, string $requestUri): array
     {
         $routeInfo = $this->dispatcher->dispatch($requestMethod, $this->prepareRequestUri($requestUri));
@@ -40,6 +50,8 @@ class FastRouteService
 
     /**
      * Strip query string (?foo=bar) and decode URI
+     * @param string $requestUri
+     * @return string
      */
     private function prepareRequestUri(string $requestUri): string
     {

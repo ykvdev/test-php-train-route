@@ -25,6 +25,10 @@ class Bootstrap
     /** @var LoggerService */
     private LoggerService $errorsLogger;
 
+    /**
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
     public function __construct()
     {
         $this->di = new Container();
@@ -34,6 +38,10 @@ class Bootstrap
         $this->errorsLogger = $this->di->make(LoggerService::class, ['logName' => $this->config->get('app_errors_log_name')]);
     }
 
+    /**
+     * @return void
+     * @throws \Throwable
+     */
     public function run(): void
     {
         $requestFilePath = $this->config->get('public_dir_path') . $_SERVER['REQUEST_URI'];
@@ -47,6 +55,9 @@ class Bootstrap
 
     /**
      * Returns file MIME-type or false if not available for public
+     *
+     * @param string $filePath
+     * @return string|false
      */
     private function getPublicFileMimeType(string $filePath): string|false
     {
@@ -69,6 +80,10 @@ class Bootstrap
         return $fileMimeType;
     }
 
+    /**
+     * @return void
+     * @throws \Throwable
+     */
     private function runAction(): void
     {
         $routeData = $this->fastRoute->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

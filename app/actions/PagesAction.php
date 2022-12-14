@@ -4,6 +4,9 @@ namespace app\actions;
 
 class PagesAction extends AbstractAction
 {
+    /**
+     * @return void
+     */
     public function run(): void
     {
         $pages = [
