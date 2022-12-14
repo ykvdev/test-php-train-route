@@ -2,15 +2,13 @@
 
 namespace app\api\Starliner;
 
-use app\api\Starliner\Operations\TrainRouteOperation;
-
 class Client
 {
     /** @var Credentials */
-    private readonly Credentials $credentials;
+    protected readonly Credentials $credentials;
 
     /** @var \SoapClient */
-    private readonly \SoapClient $soapClient;
+    protected readonly \SoapClient $soapClient;
 
     /**
      * @param Credentials $credentials
@@ -29,15 +27,5 @@ class Client
             'trace'       => true,
             'exceptions'  => false
         ]);
-    }
-
-    /**
-     * Метод отдающий маршрут поезда
-     *
-     * @return TrainRouteOperation
-     */
-    public function getTrainRouteOperation(): TrainRouteOperation
-    {
-        return (new TrainRouteOperation($this->soapClient, $this->credentials));
     }
 }

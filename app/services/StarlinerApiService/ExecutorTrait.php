@@ -1,14 +1,15 @@
 <?php
 
-namespace app\services;
+namespace app\services\StarlinerApiService;
 
-use app\api\Starliner\Client;
 use app\api\Starliner\Credentials;
-use app\api\Starliner\Operations\AbstractOperation;
 use app\api\Starliner\ResponseException;
+use app\services\ConfigService;
+use app\services\LoggerService;
+use app\services\TimerService;
 use DI\Container;
 
-class StarlinerApiService extends Client
+trait ExecutorTrait
 {
     /** @var Container */
     private readonly Container $di;
@@ -23,39 +24,34 @@ class StarlinerApiService extends Client
     private readonly LoggerService $logger;
 
     /**
+     * @param \SoapClient $soapClient
+     * @param Credentials $credentials
      * @param Container $di
      * @param ConfigService $config
      * @param TimerService $timer
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
-     * @throws \SoapFault
      */
-    public function __construct(Container $di, ConfigService $config, TimerService $timer)
+    public function __construct(\SoapClient $soapClient, Credentials $credentials, Container $di, ConfigService $config, TimerService $timer)
     {
         $this->di = $di;
         $this->config = $config;
         $this->timer = $timer;
         $this->logger = $this->di->make(LoggerService::class, ['logName' => $this->config->get('services.starliner_api.log_name')]);
 
-        $apiConfig = $this->config->get('services.starliner_api.auth');
-        parent::__construct(new Credentials(
-            $apiConfig['wsdl_url'],
-            $apiConfig['login'],
-            $apiConfig['password'],
-            $apiConfig['terminal'],
-            $apiConfig['represent_id'],
-        ));
+        parent::__construct($soapClient, $credentials);
     }
 
     /**
-     * @param AbstractOperation $operation
      * @return array
      * @throws ResponseException
      */
-    public function execOperation(AbstractOperation $operation): array
+    public function exec(): array
     {
         $this->timer->start();
-        $results = $operation->exec();
+        $results = parent::exec();
+        $this->timer->stop();
+
         $this->logger->long(
             "SPENT TIME: {$this->timer->getMinutes()} min {$this->timer->getSeconds()} sec",
             'REQUEST HEADERS:' . PHP_EOL . $results->getRequest()->getHeaders(),
