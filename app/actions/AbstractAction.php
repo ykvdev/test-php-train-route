@@ -4,13 +4,9 @@ namespace app\actions;
 
 use app\services\ConfigService;
 use app\services\ViewRendererService;
-use DI\Container;
 
 abstract class AbstractAction
 {
-    /** @var Container */
-    protected readonly Container $di;
-
     /** @var ConfigService */
     protected readonly ConfigService $config;
 
@@ -21,14 +17,12 @@ abstract class AbstractAction
     protected readonly array $routeParams;
 
     /**
-     * @param Container $di
      * @param ConfigService $config
      * @param ViewRendererService $viewRenderer
      * @param array $routeParams
      */
-    public function __construct(Container $di, ConfigService $config, ViewRendererService $viewRenderer, array $routeParams = [])
+    public function __construct(ConfigService $config, ViewRendererService $viewRenderer, array $routeParams = [])
     {
-        $this->di = $di;
         $this->config = $config;
         $this->viewRenderer = $viewRenderer;
         $this->routeParams = $routeParams;

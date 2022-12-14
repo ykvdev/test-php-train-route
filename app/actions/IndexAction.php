@@ -3,7 +3,9 @@
 namespace app\actions;
 
 use app\api\Starliner\ResponseException;
+use app\services\ConfigService;
 use app\services\StarlinerApiService\StarlinerApiService;
+use app\services\ViewRendererService;
 
 class IndexAction extends AbstractAction
 {
@@ -18,6 +20,15 @@ class IndexAction extends AbstractAction
 
     /** @var string */
     private readonly string $arrivalStation;
+
+    /** @var StarlinerApiService */
+    private readonly StarlinerApiService $starliner;
+
+    public function __construct(ConfigService $config, StarlinerApiService $starliner, ViewRendererService $viewRenderer, array $routeParams = [])
+    {
+        $this->starliner = $starliner;
+        parent::__construct($config, $viewRenderer, $routeParams);
+    }
 
     /**
      * @return void
@@ -78,8 +89,7 @@ class IndexAction extends AbstractAction
      */
     private function getTrainRoute(): array
     {
-        $starliner = $this->di->make(StarlinerApiService::class);
-        $route = $starliner->trainRouteOperation()->setParams(
+        $route = $this->starliner->trainRouteOperation()->setParams(
             $this->trainNumber,
             $this->departureDate,
             $this->departureStation,
