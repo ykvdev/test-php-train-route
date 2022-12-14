@@ -3,7 +3,9 @@
 namespace app;
 
 use app\actions\PagesAction;
+use app\actions\UserErrorException;
 use app\services\ConfigService;
+use app\services\LoggerService;
 use DI\Container;
 use FastRoute\Dispatcher;
 use app\services\FastRouteService;
@@ -11,11 +13,17 @@ use app\services\WhoopsService;
 
 class Bootstrap
 {
+    /** @var Container */
     private Container $di;
 
+    /** @var ConfigService|mixed */
     private ConfigService $config;
 
+    /** @var FastRouteService|mixed */
     private FastRouteService $fastRoute;
+
+    /** @var LoggerService */
+    private LoggerService $errorsLogger;
 
     public function __construct()
     {
@@ -23,6 +31,7 @@ class Bootstrap
         $this->di->make(WhoopsService::class);
         $this->config = $this->di->get(ConfigService::class);
         $this->fastRoute = $this->di->get(FastRouteService::class);
+        $this->errorsLogger = $this->di->make(LoggerService::class, ['logName' => $this->config->get('app_errors_log_name')]);
     }
 
     public function run(): void
@@ -79,6 +88,19 @@ class Bootstrap
                 $params = ['page' => 'error404'];
         }
 
-        $this->di->call([$action, 'run'], ['routeParams' => $params]);
+        try {
+            $this->di->call([$action, 'run'], ['routeParams' => $params]);
+        } catch (\Throwable $e) {
+            $this->errorsLogger->error(convertExceptionToString($e));
+
+            if(($params['page'] ?? null) == 'error500') {
+                throw $e;
+            } else {
+                $this->di->call([PagesAction::class, 'run'], ['routeParams' => [
+                    'page' => 'error500',
+                    'error' => $e instanceof UserErrorException ? $e->getMessage() : 'Произошла внутренняя ошибка'
+                ]]);
+            }
+        }
     }
 };

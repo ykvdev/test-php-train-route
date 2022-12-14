@@ -13,6 +13,8 @@ return [
         'ico' => 'image/x-icon',
     ],
 
+    'app_errors_log_name' => 'app_errors',
+
     'services' => [
         'view_renderer' => [
             'views_dir' => ROOT_PATH . '/app/views',
@@ -43,7 +45,7 @@ return [
 
             'routes' => [
                 [['GET', 'POST'], '/', IndexAction::class],
-                ['GET', '/pages/{page}', PagesAction::class],
+                ['GET', '/pages/{page}/{error}', PagesAction::class],
             ],
         ],
     ],

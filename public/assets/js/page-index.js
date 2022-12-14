@@ -59,11 +59,12 @@
             beforeSend: function() {
                 self.toggleFormDisablingAndAnimation();
             }
-        }).done(function(responseJson) {
-            if(responseJson.error) {
-                self.showModal(responseJson.error, false);
+        }).done(function(data, textStatus, request) {
+            const error = request.getResponseHeader('Error-Text');
+            if(error) {
+                self.showModal(error, false);
             } else {
-                self.showModal(self.formatRouteInfoToText(responseJson.stop_list));
+                self.showModal(self.formatRouteInfoToText(data.stop_list));
             }
         }).fail(function(jqxhr, textStatus, error) {
             self.showModal('Произошла непредвиденная ошибка', false);

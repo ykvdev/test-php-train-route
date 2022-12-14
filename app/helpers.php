@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @param Throwable $e
+ * @return string
+ */
 function convertExceptionToString(\Throwable $e): string
 {
     return '(' . get_class($e) . ') ' . $e->getMessage()
