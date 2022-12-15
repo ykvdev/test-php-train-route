@@ -60,15 +60,12 @@
             beforeSend: function() {
                 self.toggleFormDisableAndAnimate();
             }
-        }).done(function(data, textStatus, request) {
-            const error = request.getResponseHeader('X-Error-Text');
-            if(error) {
-                self.showModal(error, false);
-            } else {
-                self.showModal(self.formatRouteToHtml(data.route));
-            }
-        }).fail(function() {
-            self.showModal('Произошла непредвиденная ошибка', false);
+        }).done(function(data) {
+            self.showModal(self.formatRouteToHtml(data.route));
+        }).fail(function(xhr) {
+            let error = xhr.getResponseHeader('X-Error-Text');
+            error = error ? decodeURIComponent(error) : 'Произошла непредвиденная ошибка';
+            self.showModal(error, false);
         }).always(function() {
             self.toggleFormDisableAndAnimate();
         });

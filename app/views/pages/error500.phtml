@@ -1,8 +1,7 @@
 <?php
 /**
- * @var string $error
+ * @var string $title
  */
 
-$header = '500 Internal Server Error';
-$this->layout('layout', ['title' => $header]);
-echo '<h1>' . $header . '</h1><p>' . $error . '</p>';
+$this->layout('layout', compact('title'));
+echo '<h1>' . $title . '</h1>';

@@ -31,9 +31,9 @@ abstract class AbstractAction
     /**
      * Main entrypoint into the action class
      *
-     * @return void
+     * @return never
      */
-    abstract public function run(): void;
+    abstract public function run(): never;
 
     /**
      * @return bool

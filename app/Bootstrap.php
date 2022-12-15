@@ -114,8 +114,8 @@ class Bootstrap
                 throw $e;
             }
 
-            $this->di->make($actionClass, ['routeParams' => [
-                'page' => 'error500',
+            $this->di->make(PagesAction::class, ['routeParams' => [
+                'page' => 'error400',
                 'error' => $e instanceof UserErrorException ? $e->getMessage() : 'Произошла внутренняя ошибка'
             ]])->run();
         }

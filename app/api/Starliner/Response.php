@@ -29,7 +29,7 @@ class Response
 
         if($result instanceof \SoapFault) {
             $this->result = null;
-            $this->error = $result->getCode() . ' / ' . $result->getMessage();
+            $this->error = $result->getMessage();
         } else {
             $this->result = is_array($result) || is_object($result)
                 ? json_decode(json_encode($result, flags: JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR) // convert object to array

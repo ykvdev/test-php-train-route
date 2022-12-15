@@ -1,7 +1,8 @@
 <?php
 /**
  * @var string $title
+ * @var string $error
  */
 
 $this->layout('layout', compact('title'));
-echo '<h1>' . $title . '</h1>';
+echo '<h1>' . $title . '</h1><div>' . $error . '</div>';
