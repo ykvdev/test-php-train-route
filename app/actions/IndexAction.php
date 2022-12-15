@@ -2,8 +2,8 @@
 
 namespace app\actions;
 
-use app\api\Starliner\ResponseException;
 use app\services\ConfigService;
+use app\services\StarlinerApiService\ResponseException;
 use app\services\StarlinerApiService\StarlinerApiService;
 use app\services\ViewRendererService;
 
@@ -31,20 +31,20 @@ class IndexAction extends AbstractAction
     }
 
     /**
-     * @return void
+     * @return never
      * @throws ResponseException
      * @throws UserErrorException
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \JsonException
      */
-    public function run(): void
+    public function run(): never
     {
         if($this->isAjaxRequest()) {
             $this->initAndValidateInputData();
-            $this->renderJson(['route' => $this->getTrainRoute()]);
+            $this->outputJson(['route' => $this->getTrainRoute()]);
         } else {
-            $this->renderView('index/index', [
+            $this->outputView('index/index', [
                 'js' => ['/assets/js/page-index.js'],
                 'css' => ['/assets/css/page-index.css'],
             ]);

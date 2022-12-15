@@ -2,13 +2,12 @@
 
 namespace app\services\StarlinerApiService;
 
-use app\api\Starliner\Client;
 use app\api\Starliner\Credentials;
 use app\services\ConfigService;
-use app\services\TimerService;
+use app\services\StarlinerApiService\Operations\TrainRouteOperation;
 use DI\Container;
 
-class StarlinerApiService extends Client
+class StarlinerApiService
 {
     /** @var Container */
     private readonly Container $di;
@@ -16,12 +15,15 @@ class StarlinerApiService extends Client
     /** @var ConfigService */
     private readonly ConfigService $config;
 
+    /** @var Credentials */
+    protected readonly Credentials $credentials;
+
+    /** @var \SoapClient */
+    protected readonly \SoapClient $soapClient;
+
     /**
      * @param Container $di
      * @param ConfigService $config
-     * @param TimerService $timer
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * @throws \SoapFault
      */
     public function __construct(Container $di, ConfigService $config)
@@ -29,14 +31,10 @@ class StarlinerApiService extends Client
         $this->di = $di;
         $this->config = $config;
 
-        $apiConfig = $this->config->get('services.starliner_api.auth');
-        parent::__construct(new Credentials(
-            $apiConfig['wsdl_url'],
-            $apiConfig['login'],
-            $apiConfig['password'],
-            $apiConfig['terminal'],
-            $apiConfig['represent_id'],
-        ));
+        $apiConfig = $this->config->get('services.starliner_api');
+        $this->credentials = new Credentials($apiConfig['auth']['login'], $apiConfig['auth']['password'],
+            $apiConfig['auth']['terminal'], $apiConfig['auth']['represent_id']);
+        $this->soapClient = new \SoapClient($apiConfig['wsdl_url'], $apiConfig['soap_options']);
     }
 
     /**

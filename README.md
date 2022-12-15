@@ -1,10 +1,10 @@
-# PHP Train Route Test Task
+# Train Route PHP Test Task
 
 ## Usage
 
 1. Clone: `git clone https://bitbucket.org/atoumus/test_php_train_route.git && cd ./test_php_train_route`
 1. Install PHP dependencies: `composer install`
-1. Install JS/CSS dependencies: `npm install --prefix ./public/assets`
+1. Install JS/CSS dependencies: `npm install --prefix ./public`
 1. Run PHP built-in server: `php -S 0.0.0.0:8000 -t public ./public/index.php`
 1. Go to browser: http://{your-ip-address}:8000
 

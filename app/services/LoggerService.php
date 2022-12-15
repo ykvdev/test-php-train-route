@@ -26,8 +26,7 @@ class LoggerService
      */
     public function info(string $msg): void
     {
-        $msg = date('Y-m-d H:i:s') . ' [INFO] ' . $msg;
-        $this->log($msg);
+        $this->log(date('Y-m-d H:i:s') . ' [INFO] ' . $msg);
     }
 
     /**
@@ -35,8 +34,7 @@ class LoggerService
      * @return void
      */
     public function error(string $msg): void {
-        $msg = date('Y-m-d H:i:s') . ' [ERROR] ' . $msg;
-        $this->log($msg);
+        $this->log(date('Y-m-d H:i:s') . ' [ERROR] ' . $msg);
     }
 
     /**

@@ -23,12 +23,12 @@ class FastRouteService
 
         $this->dispatcher = cachedDispatcher(function(RouteCollector $r) {
             foreach ($this->config->get('services.fast_route.routes') as $routeParts) {
-                [$method, $route, $action] = $routeParts;
-                $r->addRoute($method, $route, $action);
+                //[$method, $route, $action] = $routeParts;
+                $r->addRoute(...$routeParts);
             }
         }, [
             'cacheFile' => $this->config->get('services.fast_route.cache_file'),
-            'cacheDisabled' => true,
+            'cacheDisabled' => APP_ENV == APP_ENV_DEV,
         ]);
     }
 
@@ -58,8 +58,7 @@ class FastRouteService
         if (false !== $pos = strpos($requestUri, '?')) {
             $requestUri = substr($requestUri, 0, $pos);
         }
-        $requestUri = rawurldecode($requestUri);
 
-        return $requestUri;
+        return rawurldecode($requestUri);
     }
 }

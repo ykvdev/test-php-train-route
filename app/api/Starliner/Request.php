@@ -11,10 +11,10 @@ class Request
     private string $body;
 
     /**
-     * @param string|null $headers
+     * @param string $headers
      * @param string $body
      */
-    public function __construct(?string $headers, string $body)
+    public function __construct(string $headers, string $body)
     {
         $this->headers = trim($headers);
         $this->body = trim($body);

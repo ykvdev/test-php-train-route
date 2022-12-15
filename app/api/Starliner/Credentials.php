@@ -5,42 +5,29 @@ namespace app\api\Starliner;
 class Credentials
 {
     /** @var string */
-    private string $wsdlUrl;
+    private readonly string $login;
 
     /** @var string */
-    private string $login;
+    private readonly string $password;
 
     /** @var string */
-    private string $password;
-
-    /** @var string */
-    private string $terminal;
+    private readonly string $terminal;
 
     /** @var int */
-    private int $representId;
+    private readonly int $representId;
 
     /**
-     * @param string $wsdlUrl
      * @param string $login
      * @param string $password
      * @param string $terminal
      * @param int $representId
      */
-    public function __construct(string $wsdlUrl, string $login, string $password, string $terminal, int $representId)
+    public function __construct(string $login, string $password, string $terminal, int $representId)
     {
-        $this->wsdlUrl = $wsdlUrl;
         $this->login = $login;
         $this->password = $password;
         $this->terminal = $terminal;
         $this->representId = $representId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWsdlUrl(): string
-    {
-        return $this->wsdlUrl;
     }
 
     /**

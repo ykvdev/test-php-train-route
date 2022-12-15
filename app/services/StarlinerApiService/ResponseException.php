@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Starliner;
+namespace app\services\StarlinerApiService;
 
 class ResponseException extends \Exception
 {

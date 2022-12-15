@@ -31,13 +31,14 @@ abstract class AbstractOperation
     }
 
     /**
-     * @return $this
+     * @return self
+     * @throws \JsonException
      */
     public function exec(): self
     {
-        $this->soapClient->__soapCall($this->getName(), $this->getParams());
+        $result = $this->soapClient->__soapCall($this->getName(), $this->getParams());
         $this->request = new Request($this->soapClient->__getLastRequestHeaders(), $this->soapClient->__getLastRequest());
-        $this->response = new Response($this->soapClient->__getLastResponseHeaders(), $this->soapClient->__getLastResponse());
+        $this->response = new Response($this->soapClient->__getLastResponseHeaders(), $this->soapClient->__getLastResponse(), $result);
 
         return $this;
     }

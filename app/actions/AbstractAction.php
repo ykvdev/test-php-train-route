@@ -44,42 +44,42 @@ abstract class AbstractAction
     }
 
     /**
-     * @param string $var
+     * @param string $varName
      * @return string|null
      */
-    protected function getVar(string $var): ?string
+    protected function getVar(string $varName): ?string
     {
-        return trim($this->routeParams[$var] ?? $_GET[$var] ?? '') ?: null;
+        return trim($this->routeParams[$varName] ?? $_GET[$varName] ?? '') ?: null;
     }
 
     /**
-     * @param string $var
+     * @param string $varName
      * @return string|null
      */
-    protected function postVar(string $var): ?string
+    protected function postVar(string $varName): ?string
     {
-        return trim($_POST[$var] ?? '') ?: null;
+        return trim($_POST[$varName] ?? '') ?: null;
     }
 
     /**
      * @param string $viewAlias
      * @param array $vars
-     * @return void
+     * @return never
      */
-    protected function renderView(string $viewAlias, array $vars = []): void
+    protected function outputView(string $viewAlias, array $vars = []): never
     {
         echo $this->viewRenderer->render($viewAlias, $vars);
+        exit;
     }
 
     /**
      * @param string|array $data
-     * @return void
+     * @return never
      * @throws \JsonException
      */
-    protected function renderJson(string|array $data): void
+    protected function outputJson(string|array $data): never
     {
         header('Content-Type: application/json');
-
         if(is_string($data)) {
             echo $data;
         } elseif(is_array($data) || is_object($data)) {
@@ -87,12 +87,13 @@ abstract class AbstractAction
         } else {
             throw new \RuntimeException('Data type for JSON render is wrong');
         }
+        exit;
     }
 
     /**
-     * @return void
+     * @return never
      */
-    protected function goBack(): void
+    protected function goBack(): never
     {
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
@@ -100,11 +101,11 @@ abstract class AbstractAction
     /**
      * @param string $toUrl
      * @param int $code
-     * @return void
+     * @return never
      */
-    protected function redirect(string $toUrl, int $code = 301): void
+    protected function redirect(string $toUrl, int $code = 301): never
     {
         header('Location: ' . $toUrl, true, $code);
-        exit();
+        exit;
     }
 }

@@ -39,15 +39,16 @@ class Bootstrap
     }
 
     /**
-     * @return void
+     * @return never
      * @throws \Throwable
      */
-    public function run(): void
+    public function run(): never
     {
         $requestFilePath = $this->config->get('public_dir_path') . $_SERVER['REQUEST_URI'];
         if($fileMimeType = $this->getPublicFileMimeType($requestFilePath)) {
             header('Content-Type: ' . $fileMimeType);
             echo file_get_contents($requestFilePath);
+            exit;
         } else {
             $this->runAction();
         }
@@ -81,41 +82,42 @@ class Bootstrap
     }
 
     /**
-     * @return void
+     * @return never
      * @throws \Throwable
      */
-    private function runAction(): void
+    private function runAction(): never
     {
         $routeData = $this->fastRoute->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
         switch ($routeData['result']) {
             case Dispatcher::METHOD_NOT_ALLOWED:
-                $action = PagesAction::class;
-                $params = ['page' => 'error405'];
+                $actionClass = PagesAction::class;
+                $routeParams = ['page' => 'error405'];
                 break;
 
             case Dispatcher::FOUND:
-                $action = $routeData['handler'];
-                $params = $routeData['params'];
+                $actionClass = $routeData['handler'];
+                $routeParams = $routeData['params'];
                 break;
 
             default:
-                $action = PagesAction::class;
-                $params = ['page' => 'error404'];
+                $actionClass = PagesAction::class;
+                $routeParams = ['page' => 'error404'];
         }
 
         try {
-            $this->di->call([$action, 'run'], ['routeParams' => $params]);
+            $this->di->make($actionClass, compact('routeParams'))->run();
         } catch (\Throwable $e) {
             $this->errorsLogger->error(convertExceptionToString($e));
 
-            if(($params['page'] ?? null) == 'error500') {
+            if((APP_ENV == APP_ENV_DEV && !($e instanceof UserErrorException))
+            || ($routeParams['page'] ?? null) == 'error500') {
                 throw $e;
-            } else {
-                $this->di->call([PagesAction::class, 'run'], ['routeParams' => [
-                    'page' => 'error500',
-                    'error' => $e instanceof UserErrorException ? $e->getMessage() : 'Произошла внутренняя ошибка'
-                ]]);
             }
+
+            $this->di->make($actionClass, ['routeParams' => [
+                'page' => 'error500',
+                'error' => $e instanceof UserErrorException ? $e->getMessage() : 'Произошла внутренняя ошибка'
+            ]])->run();
         }
     }
 };

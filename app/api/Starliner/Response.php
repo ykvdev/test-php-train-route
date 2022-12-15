@@ -4,23 +4,38 @@ namespace app\api\Starliner;
 
 class Response
 {
-    /** @var string */
-    private string $headers;
+    /** @var string|null */
+    private readonly ?string $headers;
 
-    /** @var string */
-    private string $body;
+    /** @var string|null */
+    private readonly ?string $body;
 
-    /** @var array */
-    private array $bodyDecoded;
+    /** @var mixed */
+    private readonly mixed $result;
+
+    /** @var string|null */
+    private readonly ?string $error;
 
     /**
      * @param string|null $headers
      * @param string|null $body
+     * @param mixed $result
+     * @throws \JsonException
      */
-    public function __construct(?string $headers, ?string $body)
+    public function __construct(?string $headers, ?string $body, mixed $result)
     {
-        $this->headers = trim($headers);
-        $this->body = trim($body);
+        $this->headers = $headers ? trim($headers) : null;
+        $this->body = $body ? trim($body) : null;
+
+        if($result instanceof \SoapFault) {
+            $this->result = null;
+            $this->error = $result->getCode() . ' / ' . $result->getMessage();
+        } else {
+            $this->result = is_array($result) || is_object($result)
+                ? json_decode(json_encode($result, flags: JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR) // convert object to array
+                : $result;
+            $this->error = null;
+        }
     }
 
     /**
@@ -32,19 +47,22 @@ class Response
     }
 
     /**
-     * @param bool $getDecoded
-     * @return string|array|null
+     * @return string|null
      */
-    public function getBody(bool $getDecoded = false): string|array|null
+    public function getBody(): ?string
     {
-        if(!$this->body) {
-            return null;
-        } elseif($getDecoded) {
-            $this->bodyDecoded ??= $this->decodeBody($this->body);
-            return $this->bodyDecoded['SOAP-Body']['trainRouteResponse']['return'] ?? null;
-        } else {
-            return $this->body;
-        }
+        return $this->body;
+    }
+
+    /**
+     * @param string|null $path
+     * @return mixed
+     */
+    public function getResult(?string $path = null): mixed
+    {
+        return $path && is_array($this->result)
+            ? getArrayItemByPath($this->result, $path)
+            : $this->result;
     }
 
     /**
@@ -52,35 +70,6 @@ class Response
      */
     public function getError(): ?string
     {
-        if(!$this->getBody(true)) {
-            return 'Response body not received';
-        } elseif($error = $this->bodyDecoded['SOAP-Body']['SOAP-Fault']['faultstring'] ?? null) {
-            return $error;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @param string $xml
-     * @return array|null
-     */
-    private function decodeBody(string $xml): array|null
-    {
-        // Remove namespaces from XML
-        $xml = preg_replace('/\s*xmlns[^=]*="[^"]*"/i', '', $xml);
-        $xml = preg_replace('/[a-zA-Z\d]+:([a-zA-Z\d]+[=>\s])/', '$1', $xml);
-
-        // Off XML parsing errors
-        libxml_use_internal_errors(true);
-
-        $xml = htmlspecialchars_decode($xml, ENT_XML1);
-        $xml = str_replace('&', '&amp;', $xml);
-        $xml = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOWARNING);
-
-        // Convert object to array
-        $array = json_decode(json_encode($xml), true);
-
-        return $array;
+        return $this->error;
     }
 }

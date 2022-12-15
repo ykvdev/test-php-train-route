@@ -14,7 +14,8 @@ class ViewRendererService
      */
     public function __construct(ConfigService $config)
     {
-        $this->renderer = new Engine($config->get('services.view_renderer.views_dir'), $config->get('services.view_renderer.views_ext'));
+        $rendererConfig = $config->get('services.view_renderer');
+        $this->renderer = new Engine($rendererConfig['views_dir'], $rendererConfig['views_ext']);
     }
 
     /**
@@ -27,7 +28,7 @@ class ViewRendererService
     {
         $view = $this->renderer->make($viewAlias);
         if(!$view->exists()) {
-            throw new \RuntimeException('View not found, alias: ' . $viewAlias);
+            throw new \RuntimeException("View \"{$viewAlias}\" not found");
         }
 
         return $view->render($vars);

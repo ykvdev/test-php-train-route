@@ -25,9 +25,9 @@ class TrainRouteOperation extends AbstractOperation
             'psw' => $credentials->getPassword(),
             'terminal' => $credentials->getTerminal(),
             'represent_id' => $credentials->getRepresentId(),
-            'access_token' => '',
-            'language' => '',
-            'currency' => '',
+            'access_token' => null,
+            'language' => null,
+            'currency' => null,
         ];
     }
 
@@ -36,7 +36,7 @@ class TrainRouteOperation extends AbstractOperation
      * @param \DateTime $departureDate Дата отправления
      * @param string $departureStation Станция отправления, пример: Санкт-Петербург
      * @param string $arrivalStation Станция прибытия, пример: Москва
-     * @return $this
+     * @return self
      */
     public function setParams(string $trainNumber, \DateTime $departureDate, string $departureStation, string $arrivalStation): self
     {

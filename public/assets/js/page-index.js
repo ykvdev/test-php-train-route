@@ -20,9 +20,9 @@
         },
     },
 
-    run: function () {
+    run: function() {
         const self = this;
-        $( document ).ready(function() {
+        $(document).ready(function() {
             $('form#train-route-finder').on('submit', function(e) {
                 e.preventDefault();
                 self.form = $(this);
@@ -51,29 +51,30 @@
     },
 
     sendRequest: function () {
+        const self = this;
         $.ajax({
             type: 'POST',
             url: '/',
             data: self.form.serialize(),
             dataType: 'json',
             beforeSend: function() {
-                self.toggleFormDisablingAndAnimation();
+                self.toggleFormDisableAndAnimate();
             }
         }).done(function(data, textStatus, request) {
             const error = request.getResponseHeader('Error-Text');
             if(error) {
                 self.showModal(error, false);
             } else {
-                self.showModal(self.formatRouteInfoToText(data.stop_list));
+                self.showModal(self.formatRouteToText(data.stop_list));
             }
-        }).fail(function(jqxhr, textStatus, error) {
+        }).fail(function() {
             self.showModal('Произошла непредвиденная ошибка', false);
-        }).always(function () {
-            self.toggleFormDisablingAndAnimation();
+        }).always(function() {
+            self.toggleFormDisableAndAnimate();
         });
     },
 
-    toggleFormDisablingAndAnimation: function() {
+    toggleFormDisableAndAnimate: function() {
         const fieldset = this.form.find('fieldset'),
             findIcon = this.form.find('span.find-icon');
 
@@ -86,13 +87,13 @@
         findIcon.toggleClass('rotation');
     },
 
-    formatRouteInfoToText: function (stationsList) {
+    formatRouteToText: function (stationsList) {
         let route = '';
         for(const i in stationsList) {
             let station = stationsList[i];
-            route += '<b>Станция ' + station['stop'] + ':</b> '
-                + station['arrival_time'] + ' - ' + station['departure_time']
-                + ' (' + station['stop_time'] + ' мин)<br>';
+            route += '<b>Станция ' + station.stop + ':</b> '
+                + station.arrival_time + ' - ' + station.departure_time
+                + ' (' + station.stop_time + ' мин)<br>';
         }
 
         return route;
@@ -110,7 +111,6 @@
             modalTitle.text('Ошибка');
             modalBody.addClass('text-danger');
         }
-
         modalBody.text(text);
 
         modal.modal();

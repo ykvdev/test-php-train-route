@@ -17,18 +17,17 @@ class PagesAction extends AbstractAction
         ];
 
         $page = $this->getVar('page');
-        [$code, $title] = $pages[$page] ?? [null, null];
-        if(!$code) {
-            $page = 'error404';
-            [$code, $title] = $pages[$page] ?? [null, null];
-        }
+        $page = isset($pages[$page]) ? $pages[$page] : 'error404';
+        [$code, $title] = $pages[$page];
 
         if($code != 200) {
             header($title, true, $code);
-        }
-        if($code == 500 && $error = $this->getVar('error')) {
+        } elseif($code == 500 && $error = $this->getVar('error')) {
             header('Error-Text: ' . $error);
         }
-        $this->renderView('pages/' . $page);
+        $this->outputView(
+            'pages/' . $page,
+            isset($error) ? compact('error') : []
+        );
     }
 }

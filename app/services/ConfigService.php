@@ -13,20 +13,11 @@ class ConfigService
     }
 
     /**
-     * @param string $path
+     * @param string|null $path
      * @return mixed
      */
-    public function get(string $path): mixed
+    public function get(?string $path = null): mixed
     {
-        $pathParts = explode('.', $path);
-        $config = $this->config;
-        foreach ($pathParts as $part) {
-            $config = $config[$part] ?? null;
-            if(!$config) {
-                return false;
-            }
-        }
-
-        return $config;
+        return $path ? getArrayItemByPath($this->config, $path) : $this->config;
     }
 }

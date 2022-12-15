@@ -3,7 +3,6 @@
 namespace app\services\StarlinerApiService;
 
 use app\api\Starliner\Credentials;
-use app\api\Starliner\ResponseException;
 use app\services\ConfigService;
 use app\services\LoggerService;
 use app\services\TimerService;
@@ -43,10 +42,11 @@ trait ExecutorTrait
     }
 
     /**
-     * @return array
+     * @return mixed
      * @throws ResponseException
+     * @throws \JsonException
      */
-    public function exec(): array
+    public function exec(): mixed
     {
         $this->timer->start();
         $results = parent::exec();
@@ -58,6 +58,7 @@ trait ExecutorTrait
             'REQUEST BODY:' . PHP_EOL . $results->getRequest()->getBody(),
             'RESPONSE HEADERS:' . PHP_EOL . $results->getResponse()->getHeaders(),
             'RESPONSE BODY:' . PHP_EOL . $results->getResponse()->getBody(),
+            'RESPONSE RESULT:' . PHP_EOL . var_export($results->getResponse()->getResult(), true),
             'RESPONSE ERROR: ' . ($results->getResponse()->getError() ?: '(none)')
         );
 
@@ -65,6 +66,6 @@ trait ExecutorTrait
             throw new ResponseException($error);
         }
 
-        return $results->getResponse()->getBody(true);
+        return $results->getResponse()->getResult();
     }
 }
