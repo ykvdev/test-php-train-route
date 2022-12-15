@@ -65,7 +65,7 @@
             if(error) {
                 self.showModal(error, false);
             } else {
-                self.showModal(self.formatRouteToText(data));
+                self.showModal(self.formatRouteToHtml(data.route));
             }
         }).fail(function() {
             self.showModal('Произошла непредвиденная ошибка', false);
@@ -87,19 +87,23 @@
         findIcon.toggleClass('rotation');
     },
 
-    formatRouteToText: function (stationsList) {
+    formatRouteToHtml: function (stationsList) {
         let route = '';
         for(const i in stationsList) {
             let station = stationsList[i];
-            route += '<b>Станция ' + station.stop + ':</b> '
-                + station.arrival_time + ' - ' + station.departure_time
-                + ' (' + station.stop_time + ' мин)<br>';
+            route += '<div>'
+                + 'Станция <span style="font-weight: bold; text-decoration: underline;">' + station.stop + '</span>: '
+                + station.arrival_time
+                + (station.arrival_time && station.departure_time ? ' - ' : '')
+                + station.departure_time
+                + (station.stop_time ? ' (' + station.stop_time + ' мин)' : '')
+                + '</div>';
         }
 
         return route;
     },
 
-    showModal: function(text, isSuccess = true) {
+    showModal: function(bodyHtml, isSuccess = true) {
         const modal = $('#results-modal'),
             modalTitle = modal.find('.modal-header .modal-title'),
             modalBody = modal.find('.modal-body');
@@ -111,7 +115,7 @@
             modalTitle.text('Ошибка');
             modalBody.addClass('text-danger');
         }
-        modalBody.text(text);
+        modalBody.html(bodyHtml);
 
         modal.modal();
     }
