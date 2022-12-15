@@ -23,7 +23,7 @@ class PagesAction extends AbstractAction
         if($code != 200) {
             header($title, true, $code);
         } elseif($code == 500 && $error = $this->getVar('error')) {
-            header('Error-Text: ' . $error);
+            header('X-Error-Text: ' . $error);
         }
         $this->outputView(
             'pages/' . $page,

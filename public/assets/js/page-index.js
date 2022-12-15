@@ -61,7 +61,7 @@
                 self.toggleFormDisableAndAnimate();
             }
         }).done(function(data, textStatus, request) {
-            const error = request.getResponseHeader('Error-Text');
+            const error = request.getResponseHeader('X-Error-Text');
             if(error) {
                 self.showModal(error, false);
             } else {

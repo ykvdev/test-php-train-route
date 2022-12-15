@@ -35,7 +35,7 @@ class Starliner
      */
     public function exec(OperationInterface $operation): self
     {
-        $params = array_merge($operation->getParams() ?? [], [
+        $params = array_merge([
             'auth' => [
                 'login' => $this->credentials->getLogin(),
                 'psw' => $this->credentials->getPassword(),
@@ -45,7 +45,7 @@ class Starliner
                 'language' => null,
                 'currency' => null,
             ],
-        ]);
+        ], $operation->getParams() ?? []);
 
         $result = $this->soapClient->__soapCall($operation->getName(), $params);
         $this->request = new Request($this->soapClient->__getLastRequestHeaders(), $this->soapClient->__getLastRequest());
