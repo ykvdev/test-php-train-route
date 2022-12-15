@@ -65,7 +65,7 @@
             if(error) {
                 self.showModal(error, false);
             } else {
-                self.showModal(self.formatRouteToText(data.stop_list));
+                self.showModal(self.formatRouteToText(data));
             }
         }).fail(function() {
             self.showModal('Произошла непредвиденная ошибка', false);

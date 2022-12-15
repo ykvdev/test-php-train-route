@@ -1,12 +1,10 @@
 <?php
 
-namespace app\api\Starliner\Operations;
+namespace app\api\Starliner;
 
-use app\api\Starliner\Credentials;
-use app\api\Starliner\Request;
-use app\api\Starliner\Response;
+use app\api\Starliner\Operations\OperationInterface;
 
-abstract class AbstractOperation
+class Starliner
 {
     /** @var \SoapClient */
     protected readonly \SoapClient $soapClient;
@@ -31,12 +29,25 @@ abstract class AbstractOperation
     }
 
     /**
-     * @return self
+     * @param OperationInterface $operation
+     * @return $this
      * @throws \JsonException
      */
-    public function exec(): self
+    public function exec(OperationInterface $operation): self
     {
-        $result = $this->soapClient->__soapCall($this->getName(), $this->getParams());
+        $params = array_merge($operation->getParams() ?? [], [
+            'auth' => [
+                'login' => $this->credentials->getLogin(),
+                'psw' => $this->credentials->getPassword(),
+                'terminal' => $this->credentials->getTerminal(),
+                'represent_id' => $this->credentials->getRepresentId(),
+                'access_token' => null,
+                'language' => null,
+                'currency' => null,
+            ],
+        ]);
+
+        $result = $this->soapClient->__soapCall($operation->getName(), $params);
         $this->request = new Request($this->soapClient->__getLastRequestHeaders(), $this->soapClient->__getLastRequest());
         $this->response = new Response($this->soapClient->__getLastResponseHeaders(), $this->soapClient->__getLastResponse(), $result);
 
@@ -58,14 +69,4 @@ abstract class AbstractOperation
     {
         return $this->response;
     }
-
-    /**
-     * @return string
-     */
-    abstract protected function getName(): string;
-
-    /**
-     * @return array
-     */
-    abstract protected function getParams(): array;
 }

@@ -2,6 +2,7 @@
 
 namespace app\actions;
 
+use app\api\Starliner\Operations\TrainRouteOperation;
 use app\services\ConfigService;
 use app\services\StarlinerApiService\ResponseException;
 use app\services\StarlinerApiService\StarlinerApiService;
@@ -93,12 +94,12 @@ class IndexAction extends AbstractAction
      */
     private function getTrainRoute(): array
     {
-        $route = $this->starliner->trainRouteOperation()->setParams(
+        $route = $this->starliner->exec(new TrainRouteOperation(
             $this->trainNumber,
             $this->departureDate,
             $this->departureStation,
             $this->arrivalStation
-        )->exec()['route_list'] ?? null;
+        ))->getResponse()->getResult('route_list.stop_list');
 
         if(!$route) {
             throw new UserErrorException('При получении маршрута произошла ошибка');
