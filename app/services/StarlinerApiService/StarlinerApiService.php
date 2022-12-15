@@ -11,13 +11,7 @@ use app\services\TimerService;
 use DI\Container;
 
 class StarlinerApiService extends Starliner
-{
-    /** @var Container */
-    private readonly Container $di;
-
-    /** @var ConfigService */
-    private readonly ConfigService $config;
-
+{    
     /** @var TimerService */
     private readonly TimerService $timer;
 
@@ -34,14 +28,14 @@ class StarlinerApiService extends Starliner
      */
     public function __construct(Container $di, ConfigService $config, TimerService $timer)
     {
-        $this->di = $di;
-        $this->config = $config->get('services.starliner_api');
         $this->timer = $timer;
-        $this->logger = $this->di->make(LoggerService::class, ['logName' => $this->config['log_name']]);
 
-        $soapClient = new \SoapClient($this->config['wsdl_url'], $this->config['soap_options']);
-        $credentials = new Credentials($this->config['auth']['login'], $this->config['auth']['password'],
-            $this->config['auth']['terminal'], $this->config['auth']['represent_id']);
+        $config = $config->get('services.starliner_api');
+        $this->logger = $di->make(LoggerService::class, ['logName' => $config['log_name']]);
+
+        $soapClient = new \SoapClient($config['wsdl_url'], $config['soap_options']);
+        $credentials = new Credentials($config['auth']['login'], $config['auth']['password'],
+            $config['auth']['terminal'], $config['auth']['represent_id']);
         parent::__construct($soapClient, $credentials);
     }
 
