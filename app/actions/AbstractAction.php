@@ -31,9 +31,9 @@ abstract class AbstractAction
     /**
      * Main entrypoint into the action class
      *
-     * @return never
+     * @return void
      */
-    abstract public function run(): never;
+    abstract public function run(): void;
 
     /**
      * @return bool
@@ -64,20 +64,19 @@ abstract class AbstractAction
     /**
      * @param string $viewAlias
      * @param array $vars
-     * @return never
+     * @return void
      */
-    protected function outputView(string $viewAlias, array $vars = []): never
+    protected function outputView(string $viewAlias, array $vars = []): void
     {
         echo $this->viewRenderer->render($viewAlias, $vars);
-        exit;
     }
 
     /**
      * @param string|array $data
-     * @return never
+     * @return void
      * @throws \JsonException
      */
-    protected function outputJson(string|array $data): never
+    protected function outputJson(string|array $data): void
     {
         header('Content-Type: application/json');
         if(is_string($data)) {
@@ -87,7 +86,6 @@ abstract class AbstractAction
         } else {
             throw new \RuntimeException('Data type for JSON render is wrong');
         }
-        exit;
     }
 
     /**

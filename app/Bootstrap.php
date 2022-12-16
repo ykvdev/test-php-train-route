@@ -13,6 +13,12 @@ use app\services\WhoopsService;
 
 class Bootstrap
 {
+    /** @var string */
+    private string $requestMethod;
+
+    /** @var string */
+    private string $requestUri;
+
     /** @var Container */
     private Container $di;
 
@@ -29,8 +35,10 @@ class Bootstrap
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      */
-    public function __construct()
+    public function __construct(string $requestMethod, string $requestUri)
     {
+        $this->requestMethod = $requestMethod;
+        $this->requestUri = $requestUri;
         $this->di = new Container();
         $this->di->make(WhoopsService::class);
         $this->config = $this->di->get(ConfigService::class);
@@ -39,29 +47,13 @@ class Bootstrap
     }
 
     /**
-     * @return never
-     * @throws \Throwable
-     */
-    public function run(): never
-    {
-        $requestFilePath = $this->config->get('public_dir_path') . $_SERVER['REQUEST_URI'];
-        if($fileMimeType = $this->getPublicFileMimeType($requestFilePath)) {
-            header('Content-Type: ' . $fileMimeType);
-            echo file_get_contents($requestFilePath);
-            exit;
-        } else {
-            $this->runAction();
-        }
-    }
-
-    /**
      * Returns file MIME-type or false if not available for public
      *
-     * @param string $filePath
      * @return string|false
      */
-    private function getPublicFileMimeType(string $filePath): string|false
+    public function getMimeTypeIfRequestedPublicFile(): string|false
     {
+        $filePath = $this->config->get('public_dir_path') . $this->requestUri;
         if(!is_file($filePath) || !is_readable($filePath)) {
             return false;
         }
@@ -82,12 +74,12 @@ class Bootstrap
     }
 
     /**
-     * @return never
+     * @return void
      * @throws \Throwable
      */
-    private function runAction(): never
+    public function runAction(): void
     {
-        $routeData = $this->fastRoute->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+        $routeData = $this->fastRoute->dispatch($this->requestMethod, $this->requestUri);
         switch ($routeData['result']) {
             case Dispatcher::METHOD_NOT_ALLOWED:
                 $actionClass = PagesAction::class;

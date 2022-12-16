@@ -32,14 +32,14 @@ class IndexAction extends AbstractAction
     }
 
     /**
-     * @return never
+     * @return void
      * @throws ResponseException
      * @throws UserErrorException
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \JsonException
      */
-    public function run(): never
+    public function run(): void
     {
         if($this->isAjaxRequest()) {
             $this->initAndValidateInputData();
