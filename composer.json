@@ -27,6 +27,7 @@
         ]
     },
     "require-dev": {
-        "filp/whoops": "^2.5"
+        "filp/whoops": "^2.5",
+        "phpunit/phpunit": "^9.5"
     }
 }
