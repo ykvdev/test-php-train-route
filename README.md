@@ -2,7 +2,7 @@
 
 ## Usage
 
-1. Clone: `git clone https://bitbucket.org/atoumus/test_php_train_route.git && cd ./test_php_train_route`
+1. Clone: `git clone git@github.com:ykvdev/test-php-train-route.git && cd ./test-php-train-route`
 1. Install PHP dependencies: `composer install`
 1. Install JS/CSS dependencies: `npm install --prefix ./public`
 1. Run tests: `vendor/bin/phpunit`
